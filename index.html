@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -60,6 +59,7 @@ header p {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .marcador {
@@ -68,6 +68,27 @@ header p {
   padding: 10px 13px;
   font-size: 13px;
   font-weight: bold;
+}
+
+/* BOTÓN DE YOUTUBE EN EL HEADER */
+.btn-youtube-header {
+  background: linear-gradient(135deg, #ff5e62, #ff9966);
+  color: white;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(255, 94, 98, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-youtube-header:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(255, 94, 98, 0.6);
 }
 
 main {
@@ -399,6 +420,10 @@ button {
     <div class="marcador">🪙 <span id="monedas">0</span></div>
     <div class="marcador">❤️ <span id="vidas">3</span></div>
     <div class="marcador">🍕 <span id="servidas">0</span></div>
+    <!-- BOTÓN DE YOUTUBE AÑADIDO AQUÍ -->
+    <a href="https://youtube.com/shorts/AQiypUksqZE" target="_blank" class="btn-youtube-header">
+      ▶ Ver video 🎬
+    </a>
   </div>
 </header>
 
@@ -1579,23 +1604,6 @@ document.addEventListener("keydown", e => {
 // PREPARACIÓN PARA ARDUINO UNO
 // =====================================
 
-// Esta función permitirá controlar el juego
-// desde los dos faders y cuatro botones físicos.
-//
-// Ejemplo de datos:
-// {
-//   ingrediente: 3,
-//   temperatura: 225,
-//   agregar: true,
-//   hornear: false,
-//   girar: false,
-//   entregar: false
-// }
-//
-// Los botones deberán enviarse como eventos
-// de pulsación, no continuamente mientras
-// estén presionados.
-
 window.recibirArduino = function(datos) {
 
   if (typeof datos.ingrediente === "number") {
@@ -1638,7 +1646,6 @@ dibujar();
 </script>
 <script>
 // CONEXIÓN USB DEL ARDUINO (Chrome / Edge)
-// Protocolo: ingredienteAnalogico,temperaturaAnalogica,agregar,hornear,girar,entregar
 (() => {
   const boton = document.getElementById('conectarArduino');
   const estado = document.getElementById('estadoArduino');
@@ -1646,7 +1653,6 @@ dibujar();
   let lector = null;
   let conectando = false;
   let conectado = false;
-  let ultimaLectura = '';
 
   function mostrar(texto) { estado.textContent = texto; }
 
@@ -1679,7 +1685,6 @@ dibujar();
     boton.disabled = true;
     mostrar('Selecciona Arduino Uno en la ventana de Chrome…');
     try {
-      // La solicitud se hace una sola vez, por clic del usuario.
       puerto = await navigator.serial.requestPort();
       await puerto.open({ baudRate: 9600 });
       conectado = true;
@@ -1687,7 +1692,6 @@ dibujar();
       mostrar('Conectado. ¡Ya puedes jugar!');
       const decodificador = new TextDecoder();
       let buffer = '';
-      // Este bucle permanece activo mientras el USB esté conectado.
       while (puerto.readable) {
         lector = puerto.readable.getReader();
         try {
