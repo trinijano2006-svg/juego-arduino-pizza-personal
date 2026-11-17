@@ -1,0 +1,1753 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIZZA PANIC | Trattoria Italiana</title>
+
+<style>
+:root {
+  --verde: #344e41;
+  --verde-claro: #58765c;
+  --terracota: #b95238;
+  --crema: #fff4df;
+  --madera: #a76f4a;
+  --texto: #344035;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #e9dfcd;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  color: var(--texto);
+}
+
+header {
+  background: var(--verde);
+  color: white;
+  padding: 17px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  border-bottom: 6px solid #b78755;
+}
+
+h1 {
+  font-family: Georgia, serif;
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 2px;
+}
+
+h1 span {
+  color: #f4c87c;
+}
+
+header p {
+  font-size: 11px;
+  letter-spacing: 3px;
+  margin: 5px 0 0;
+}
+
+.marcadores {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.marcador {
+  background: #496b56;
+  border-radius: 20px;
+  padding: 10px 13px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+main {
+  max-width: 1350px;
+  margin: auto;
+  padding: 18px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+}
+
+.escenario {
+  position: relative;
+  border: 8px solid #9e6245;
+  border-radius: 17px;
+  overflow: hidden;
+  background: #edc49c;
+  box-shadow: 0 8px 25px #0002;
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.paneles {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.panel {
+  background: #fff9ed;
+  border: 2px solid #d9c5a5;
+  border-radius: 13px;
+  padding: 17px;
+  box-shadow: 0 4px 0 #c9b69a;
+}
+
+h2 {
+  font-family: Georgia, serif;
+  color: #914732;
+  margin: 0 0 13px;
+  font-size: 20px;
+}
+
+.pedido {
+  background: white;
+  border: 2px dashed #d6b57e;
+  border-radius: 10px;
+  padding: 13px;
+}
+
+.nombre-pizza {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.tiempo {
+  font-size: 25px;
+  font-weight: bold;
+  color: var(--terracota);
+  margin: 10px 0;
+}
+
+.detalle {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #687265;
+}
+
+.ingredientes-pedido {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.etiqueta {
+  padding: 6px 8px;
+  border-radius: 15px;
+  background: #f6dfd9;
+  font-size: 12px;
+}
+
+.etiqueta.listo {
+  background: #d9ead4;
+}
+
+.barra {
+  height: 11px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #e4d9c7;
+  margin: 10px 0;
+}
+
+.relleno {
+  height: 100%;
+  width: 0%;
+  background: #70a16d;
+  transition: width .15s;
+}
+
+.estado {
+  background: #e7eee1;
+  padding: 12px;
+  border-radius: 9px;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.controles {
+  margin-top: 18px;
+  background: #fff8e9;
+  border: 2px solid #d7c19d;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.faders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.fader {
+  background: #f0e6d1;
+  border-radius: 12px;
+  padding: 17px;
+}
+
+.fader label {
+  display: block;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.valor {
+  color: #a74b34;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: #b85238;
+  cursor: pointer;
+}
+
+.botones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.accion {
+  min-height: 65px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  background: #bc543b;
+  box-shadow: 0 5px 0 #813b2b;
+}
+
+.accion:nth-child(2) {
+  background: #577b59;
+  box-shadow: 0 5px 0 #37533a;
+}
+
+.accion:nth-child(3) {
+  background: #c69449;
+  box-shadow: 0 5px 0 #8e6b35;
+}
+
+.accion:nth-child(4) {
+  background: #395d52;
+  box-shadow: 0 5px 0 #24443b;
+}
+
+.accion:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+.ayuda {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #697368;
+  margin-top: 16px;
+}
+
+.mensaje {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff8e9;
+  border: 2px solid #c89568;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 3;
+  display: none;
+  max-width: 85%;
+}
+
+.modal {
+  position: absolute;
+  inset: 0;
+  background: #193b31e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  padding: 20px;
+}
+
+.modal.oculto {
+  display: none;
+}
+
+.modal-contenido {
+  background: #fff7e5;
+  border: 7px double #bb7951;
+  border-radius: 18px;
+  text-align: center;
+  padding: 30px;
+  max-width: 470px;
+}
+
+.modal-contenido h2 {
+  font-size: 38px;
+}
+
+.modal-contenido p {
+  line-height: 1.7;
+}
+
+.iniciar {
+  background: var(--terracota);
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+@media(max-width: 950px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .paneles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width: 650px) {
+  .paneles,
+  .faders {
+    grid-template-columns: 1fr;
+  }
+
+  .botones {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Pedido siempre visible mientras usas los controles */
+.pedido-fijo {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background: #fff9ed;
+  border-bottom: 3px solid #b78755;
+  box-shadow: 0 3px 12px #0002;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+.pedido-fijo .pedido-fijo-titulo { font-weight: 800; color: #914732; }
+.pedido-fijo .pedido-fijo-ingredientes { display:flex; flex-wrap:wrap; gap:6px; flex: 1 1 350px; }
+.pedido-fijo .etiqueta { font-size:13px; font-weight:700; border:1px solid #d9c5a5; padding:7px 9px; }
+.pedido-fijo .etiqueta.listo { border-color:#75a16e; }
+.pedido-fijo .pedido-fijo-seleccion { background:#344e41; color:white; border-radius:9px; padding:9px 12px; font-weight:bold; }
+@media(max-width:650px) {
+  .pedido-fijo { padding:8px 10px; gap:7px; font-size:12px; }
+  .pedido-fijo .etiqueta { padding:5px 7px; font-size:11px; }
+  .pedido-fijo .pedido-fijo-ingredientes { flex-basis:100%; }
+}
+</style>
+</head>
+
+<body>
+<div id="barraArduino" style="padding:9px 20px;background:#fff4df;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+  <button id="conectarArduino" type="button" style="background:#344e41;color:white;border:0;border-radius:8px;padding:10px 15px;font-weight:bold;">🎮 CONECTAR ARDUINO</button>
+  <span id="estadoArduino" role="status">Arduino desconectado</span>
+</div>
+
+<header>
+  <div>
+    <h1>🍕 PIZZA <span>PANIC</span></h1>
+    <p>LA TRATTORIA · COCINA A CONTRARRELOJ</p>
+  </div>
+
+  <div class="marcadores">
+    <div class="marcador">⭐ <span id="puntos">0</span></div>
+    <div class="marcador">🪙 <span id="monedas">0</span></div>
+    <div class="marcador">❤️ <span id="vidas">3</span></div>
+    <div class="marcador">🍕 <span id="servidas">0</span></div>
+  </div>
+</header>
+
+
+<div class="pedido-fijo" aria-label="Resumen visible del pedido">
+  <span class="pedido-fijo-titulo">🧾 PEDIDO: <span id="pedidoFijoNombre">Esperando cliente...</span></span>
+  <span id="pedidoFijoTiempo">--</span>
+  <div class="pedido-fijo-ingredientes" id="pedidoFijoIngredientes">Abre la pizzería para comenzar.</div>
+  <span class="pedido-fijo-seleccion">🎚️ Elegido: <span id="pedidoFijoSeleccion">Salsa de tomate</span></span>
+</div>
+
+<main>
+
+<div class="layout">
+
+  <section class="escenario">
+
+    <canvas id="juego" width="900" height="600"></canvas>
+
+    <div class="mensaje" id="mensaje"></div>
+
+    <div class="modal" id="modal">
+      <div class="modal-contenido">
+        <h2 id="tituloModal">¡Benvenuta!</h2>
+
+        <p id="textoModal">
+          ¡Bienvenida a tu pizzería italiana!
+          Prepara pizzas, controla el horno y
+          entrega los pedidos antes de que
+          los clientes pierdan la paciencia.
+        </p>
+
+        <button class="iniciar" id="iniciar">
+          ¡ABRIR LA PIZZERÍA!
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+  <aside class="paneles">
+
+    <section class="panel">
+      <h2>🧾 Pedido del cliente</h2>
+
+      <div class="pedido">
+        <div class="nombre-pizza" id="nombrePizza">
+          Esperando cliente...
+        </div>
+
+        <div class="detalle" id="cliente">
+          Abre la pizzería para comenzar.
+        </div>
+
+        <div class="tiempo" id="tiempo">--</div>
+
+        <div class="ingredientes-pedido"
+             id="ingredientesPedido"></div>
+
+        <div class="detalle" id="temperaturaIdeal">
+          Temperatura recomendada: --
+        </div>
+
+        <div class="barra">
+          <div class="relleno"
+               id="barraPaciencia"
+               style="width:100%"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>🔥 Estado del horno</h2>
+
+      <div class="estado" id="estado">
+        Cocina cerrada
+      </div>
+
+      <div class="detalle" id="coccionTexto">
+        Prepara una pizza para comenzar.
+      </div>
+
+      <div class="barra">
+        <div class="relleno" id="barraCoccion"></div>
+      </div>
+
+      <div class="detalle" id="giros">
+        Giros: 0
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>🏆 Tu progreso</h2>
+
+      <div class="estado">
+        Nivel <span id="nivel">1</span>
+      </div>
+
+      <div class="detalle">
+        Cada tres pizzas servidas aumenta
+        el nivel y llegan pedidos más difíciles.
+      </div>
+
+      <p class="detalle">
+        Racha de pizzas perfectas:
+        <strong id="racha">0</strong>
+      </p>
+
+      <div class="estado" id="resultado">
+        ¡Tu cocina está lista!
+      </div>
+    </section>
+
+  </aside>
+
+</div>
+
+<section class="controles">
+
+  <h2>🎛️ Tu estación de chef</h2>
+
+  <div class="faders">
+
+    <div class="fader">
+      <label for="selector">
+        FADER 1 · INGREDIENTES
+      </label>
+
+      <div class="valor" id="valorIngrediente">
+        Salsa de tomate
+      </div>
+
+      <input
+        type="range"
+        id="selector"
+        min="0"
+        max="6"
+        step="1"
+        value="0"
+      >
+
+      <div class="ayuda">
+        Desliza para elegir el ingrediente
+        que quieres agregar a tu pizza.
+      </div>
+    </div>
+
+    <div class="fader">
+      <label for="temperatura">
+        FADER 2 · TEMPERATURA DEL HORNO
+      </label>
+
+      <div class="valor" id="valorTemperatura">
+        220 °C
+      </div>
+
+      <input
+        type="range"
+        id="temperatura"
+        min="150"
+        max="300"
+        value="220"
+      >
+
+      <div class="ayuda">
+        150 °C — Horno suave
+        <br>
+        300 °C — Horno muy caliente
+      </div>
+    </div>
+
+  </div>
+
+  <div class="botones">
+    <button class="accion" id="agregar">
+      ➕ AGREGAR
+    </button>
+
+    <button class="accion" id="hornear">
+      🔥 HORNEAR / SACAR
+    </button>
+
+    <button class="accion" id="girar">
+      🔄 GIRAR
+    </button>
+
+    <button class="accion" id="entregar">
+      🛎️ ENTREGAR
+    </button>
+  </div>
+
+  <div class="ayuda">
+    <strong>Teclado:</strong>
+    ← → ingredientes · ↑ ↓ temperatura ·
+    A agregar · H hornear/sacar ·
+    G girar · E entregar.
+    <br>
+    <strong>Consejo:</strong>
+    agrega los ingredientes correctos,
+    hornea cerca de la temperatura recomendada,
+    gira la pizza y retírala cuando esté
+    entre el 85 % y el 110 % de cocción.
+  </div>
+
+</section>
+
+</main>
+
+<script>
+"use strict";
+
+// =====================================
+// ELEMENTOS DEL JUEGO
+// =====================================
+
+const $ = id => document.getElementById(id);
+
+const canvas = $("juego");
+const ctx = canvas.getContext("2d");
+
+const W = canvas.width;
+const H = canvas.height;
+
+const ingredientes = [
+  { nombre: "Salsa de tomate", emoji: "🍅" },
+  { nombre: "Mozzarella", emoji: "🧀" },
+  { nombre: "Pepperoni", emoji: "🥓" },
+  { nombre: "Champiñones", emoji: "🍄" },
+  { nombre: "Aceitunas", emoji: "🫒" },
+  { nombre: "Albahaca", emoji: "🌿" },
+  { nombre: "Pimentón", emoji: "🫑" }
+];
+
+const recetas = [
+  {
+    nombre: "Margarita",
+    ingredientes: [0, 1, 5],
+    temperatura: 220
+  },
+  {
+    nombre: "Pepperoni",
+    ingredientes: [0, 1, 2],
+    temperatura: 235
+  },
+  {
+    nombre: "Funghi",
+    ingredientes: [0, 1, 3],
+    temperatura: 215
+  },
+  {
+    nombre: "Mediterránea",
+    ingredientes: [0, 1, 4, 5],
+    temperatura: 225
+  },
+  {
+    nombre: "Vegetariana",
+    ingredientes: [0, 1, 3, 6],
+    temperatura: 210
+  },
+  {
+    nombre: "Especial de la casa",
+    ingredientes: [0, 1, 2, 3, 4],
+    temperatura: 240
+  }
+];
+
+const clientes = [
+  "Giulia", "Marco", "Lucía",
+  "Enzo", "Sofía", "Lorenzo",
+  "Valentina", "Pietro"
+];
+
+let juego = {
+  activo: false,
+  puntos: 0,
+  monedas: 0,
+  vidas: 3,
+  servidas: 0,
+  racha: 0,
+  nivel: 1,
+  pedido: null,
+  pizza: null,
+  fase: "preparar",
+  tiempoAnterior: 0,
+  animacion: 0,
+  avisoHasta: 0,
+  proximoPedido: 0
+};
+
+// =====================================
+// CONTROLES
+// =====================================
+
+function ingredienteActual() {
+  return Number($("selector").value);
+}
+
+function temperaturaActual() {
+  return Number($("temperatura").value);
+}
+
+function actualizarControles() {
+  $("valorIngrediente").textContent =
+    ingredientes[ingredienteActual()].nombre;
+
+  $("valorTemperatura").textContent =
+    temperaturaActual() + " °C";
+}
+
+// =====================================
+// INICIO Y PEDIDOS
+// =====================================
+
+function comenzar() {
+  juego.activo = true;
+  juego.puntos = 0;
+  juego.monedas = 0;
+  juego.vidas = 3;
+  juego.servidas = 0;
+  juego.racha = 0;
+  juego.nivel = 1;
+  juego.animacion = 0;
+  juego.proximoPedido = 0;
+
+  $("modal").classList.add("oculto");
+
+  nuevoPedido();
+
+  juego.tiempoAnterior = performance.now();
+  requestAnimationFrame(bucle);
+}
+
+function nuevaPizza() {
+  juego.pizza = {
+    ingredientes: [],
+    posiciones: [],
+    coccion: 0,
+    quemado: 0,
+    giros: 0,
+    desequilibrio: 0,
+    tiempoHorno: 0
+  };
+
+  juego.fase = "preparar";
+}
+
+function nuevoPedido() {
+  const cantidadDisponible = Math.min(
+    recetas.length,
+    3 + Math.floor(juego.servidas / 2)
+  );
+
+  const receta = recetas[
+    Math.floor(Math.random() * cantidadDisponible)
+  ];
+
+  const tiempo = Math.max(
+    42,
+    85 - (juego.nivel - 1) * 7
+  );
+
+  juego.pedido = {
+    ...receta,
+    cliente: clientes[
+      Math.floor(Math.random() * clientes.length)
+    ],
+    restante: tiempo,
+    maximo: tiempo
+  };
+
+  nuevaPizza();
+
+  $("resultado").textContent =
+    "¡Nuevo pedido! Prepara la pizza.";
+
+  actualizarPanel();
+}
+
+// =====================================
+// ACCIONES DE COCINA
+// =====================================
+
+function avisar(texto) {
+  $("mensaje").textContent = texto;
+  $("mensaje").style.display = "block";
+
+  juego.avisoHasta = performance.now() + 1800;
+}
+
+function agregarIngrediente() {
+  if (!juego.activo) return;
+
+  if (juego.fase !== "preparar") {
+    avisar("¡No puedes agregar ingredientes ahora!");
+    return;
+  }
+
+  const id = ingredienteActual();
+
+  if (juego.pizza.ingredientes.includes(id)) {
+    avisar("¡Ese ingrediente ya está agregado!");
+    return;
+  }
+
+  juego.pizza.ingredientes.push(id);
+
+  for (let i = 0; i < 9; i++) {
+    const angulo = Math.random() * Math.PI * 2;
+    const radio = Math.sqrt(Math.random()) * 95;
+
+    juego.pizza.posiciones.push({
+      id,
+      x: Math.cos(angulo) * radio,
+      y: Math.sin(angulo) * radio * 0.7
+    });
+  }
+
+  avisar(
+    ingredientes[id].emoji + " " +
+    ingredientes[id].nombre + " agregado"
+  );
+
+  actualizarPanel();
+}
+
+function accionHorno() {
+  if (!juego.activo) return;
+
+  if (juego.fase === "preparar") {
+    if (juego.pizza.ingredientes.length === 0) {
+      avisar("¡Primero agrega ingredientes!");
+      return;
+    }
+
+    juego.fase = "horneando";
+    avisar("🔥 ¡Pizza dentro del horno!");
+
+  } else if (juego.fase === "horneando") {
+    juego.fase = "lista";
+    avisar("🍕 ¡Pizza fuera del horno!");
+
+  } else {
+    avisar("¡La pizza ya salió del horno!");
+  }
+
+  actualizarPanel();
+}
+
+function girarPizza() {
+  if (!juego.activo) return;
+
+  if (juego.fase !== "horneando") {
+    avisar("¡Solo puedes girarla dentro del horno!");
+    return;
+  }
+
+  juego.pizza.giros++;
+
+  juego.pizza.desequilibrio = Math.max(
+    0,
+    juego.pizza.desequilibrio - 12
+  );
+
+  avisar("🔄 ¡Pizza girada!");
+
+  actualizarPanel();
+}
+
+function entregarPizza() {
+  if (!juego.activo) return;
+
+  if (juego.fase !== "lista") {
+    avisar("¡Primero debes sacar la pizza del horno!");
+    return;
+  }
+
+  const pedido = juego.pedido;
+  const pizza = juego.pizza;
+
+  const correctos =
+    pedido.ingredientes.length ===
+      pizza.ingredientes.length &&
+    pedido.ingredientes.every(id =>
+      pizza.ingredientes.includes(id)
+    );
+
+  const buenaCoccion =
+    pizza.coccion >= 85 &&
+    pizza.coccion <= 110;
+
+  const bienGirado =
+    pizza.giros >= 1 &&
+    pizza.desequilibrio < 30;
+
+  const noQuemada = pizza.quemado < 25;
+
+  const perfecta =
+    correctos &&
+    buenaCoccion &&
+    bienGirado &&
+    noQuemada;
+
+  juego.servidas++;
+
+  if (perfecta) {
+    const bonus = Math.ceil(pedido.restante * 3);
+
+    juego.puntos += 300 + bonus;
+    juego.monedas += 25;
+    juego.racha++;
+
+    avisar(
+      "⭐⭐⭐ ¡PIZZA PERFECTA! +" +
+      (300 + bonus) + " puntos"
+    );
+
+    $("resultado").textContent =
+      "¡Excelente! Cliente feliz.";
+
+  } else {
+    juego.vidas--;
+    juego.racha = 0;
+
+    let problemas = [];
+
+    if (!correctos) {
+      problemas.push("ingredientes incorrectos");
+    }
+
+    if (!buenaCoccion) {
+      problemas.push("cocción incorrecta");
+    }
+
+    if (!bienGirado) {
+      problemas.push("faltó girar la pizza");
+    }
+
+    if (!noQuemada) {
+      problemas.push("pizza quemada");
+    }
+
+    avisar("❌ Pedido rechazado");
+
+    $("resultado").textContent =
+      problemas.join(", ");
+  }
+
+  juego.nivel = 1 + Math.floor(juego.servidas / 3);
+
+  actualizarPanel();
+
+  if (juego.vidas <= 0) {
+    terminarJuego();
+  } else {
+    juego.pedido = null;
+    juego.proximoPedido = 1.2;
+  }
+}
+
+function perderCliente() {
+  juego.vidas--;
+  juego.racha = 0;
+
+  avisar("😡 ¡El cliente se fue!");
+
+  $("resultado").textContent =
+    "¡Se acabó el tiempo!";
+
+  if (juego.vidas <= 0) {
+    terminarJuego();
+  } else {
+    nuevoPedido();
+  }
+}
+
+function terminarJuego() {
+  juego.activo = false;
+
+  $("tituloModal").textContent =
+    "¡FIN DEL TURNO!";
+
+  $("textoModal").innerHTML =
+    "Preparaste <strong>" +
+    juego.servidas +
+    "</strong> pizzas.<br>" +
+    "Conseguiste <strong>" +
+    juego.puntos +
+    "</strong> puntos y <strong>" +
+    juego.monedas +
+    "</strong> monedas.<br><br>" +
+    "¿Quieres volver a abrir la trattoria?";
+
+  $("iniciar").textContent = "VOLVER A JUGAR";
+
+  $("modal").classList.remove("oculto");
+}
+
+// =====================================
+// ACTUALIZACIÓN DEL JUEGO
+// =====================================
+
+function actualizar(dt) {
+  juego.animacion += dt;
+
+  if (juego.proximoPedido > 0) {
+    juego.proximoPedido -= dt;
+
+    if (juego.proximoPedido <= 0) {
+      nuevoPedido();
+    }
+
+    return;
+  }
+
+  if (!juego.pedido) return;
+
+  juego.pedido.restante -= dt;
+
+  if (juego.pedido.restante <= 0) {
+    perderCliente();
+    return;
+  }
+
+  if (juego.fase === "horneando") {
+    const pizza = juego.pizza;
+
+    const diferencia = Math.abs(
+      temperaturaActual() -
+      juego.pedido.temperatura
+    );
+
+    const eficiencia = Math.max(
+      0.2,
+      1 - diferencia / 160
+    );
+
+    pizza.coccion += dt * 7.8 * eficiencia;
+
+    pizza.tiempoHorno += dt;
+
+    pizza.desequilibrio += dt * (
+      1.4 + diferencia / 35
+    );
+
+    if (pizza.coccion > 105) {
+      pizza.quemado += dt * (
+        1 + (pizza.coccion - 105) * 0.15
+      );
+    }
+
+    if (temperaturaActual() > 270) {
+      pizza.quemado += dt * 2;
+    }
+
+    if (pizza.coccion >= 150) {
+      pizza.quemado = 100;
+    }
+  }
+
+  actualizarPanel();
+
+  if (performance.now() > juego.avisoHasta) {
+    $("mensaje").style.display = "none";
+  }
+}
+
+function actualizarPanel() {
+  actualizarControles();
+
+  $("puntos").textContent = juego.puntos;
+  $("monedas").textContent = juego.monedas;
+  $("vidas").textContent = juego.vidas;
+  $("servidas").textContent = juego.servidas;
+  $("nivel").textContent = juego.nivel;
+  $("racha").textContent = juego.racha;
+
+  if (!juego.pedido || !juego.pizza) return;
+
+  const pedido = juego.pedido;
+  const pizza = juego.pizza;
+
+  $("nombrePizza").textContent =
+    "🍕 Pizza " + pedido.nombre;
+
+  $("cliente").textContent =
+    "Cliente: " + pedido.cliente;
+
+  $("tiempo").textContent =
+    Math.max(0, Math.ceil(pedido.restante)) + " s";
+
+  $("temperaturaIdeal").textContent =
+    "Temperatura recomendada: " +
+    pedido.temperatura + " °C";
+
+  $("ingredientesPedido").innerHTML =
+    pedido.ingredientes.map(id => {
+      const agregado =
+        pizza.ingredientes.includes(id);
+
+      return (
+        '<span class="etiqueta ' +
+        (agregado ? "listo" : "") +
+        '">' +
+        ingredientes[id].emoji + " " +
+        ingredientes[id].nombre +
+        (agregado ? " ✓" : "") +
+        "</span>"
+      );
+    }).join("");
+
+  const paciencia = Math.max(
+    0,
+    pedido.restante / pedido.maximo * 100
+  );
+
+  $("barraPaciencia").style.width =
+    paciencia + "%";
+
+  $("barraPaciencia").style.background =
+    paciencia < 25 ? "#bd5038" : "#70a16d";
+
+  const estados = {
+    preparar: "🥣 Preparando ingredientes",
+    horneando: "🔥 Pizza dentro del horno",
+    lista: "🛎️ Lista para entregar"
+  };
+
+  $("estado").textContent = estados[juego.fase];
+
+  $("coccionTexto").textContent =
+    "Cocción: " + Math.round(pizza.coccion) +
+    "% · Quemado: " + Math.round(pizza.quemado) +
+    "%";
+
+  $("barraCoccion").style.width =
+    Math.min(100, pizza.coccion) + "%";
+
+  $("barraCoccion").style.background =
+    pizza.coccion > 110
+      ? "#b84d38"
+      : pizza.coccion >= 85
+        ? "#70a16d"
+        : "#d99b50";
+
+  $("giros").textContent =
+    "Giros: " + pizza.giros +
+    (pizza.giros > 0 ? " ✓" : " · ¡No olvides girarla!");
+}
+
+// =====================================
+// DIBUJAR ESCENARIO
+// =====================================
+
+function rect(x, y, w, h, color, radio = 0) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, radio);
+  ctx.fill();
+}
+
+function texto(t, x, y, size, color, align = "left") {
+  ctx.fillStyle = color;
+  ctx.font = "bold " + size + "px Georgia";
+  ctx.textAlign = align;
+  ctx.fillText(t, x, y);
+}
+
+function elipse(x, y, rx, ry, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function dibujarPizza(x, y, escala) {
+  if (!juego.pizza) return;
+
+  const pizza = juego.pizza;
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(escala, escala);
+
+  const cocida = juego.fase !== "preparar";
+  const quemada = pizza.quemado > 25;
+
+  // Sombra
+  elipse(0, 10, 150, 112, "#00000030");
+
+  // Masa
+  elipse(
+    0, 0, 145, 108,
+    quemada
+      ? "#6c3c25"
+      : cocida
+        ? "#b97d3e"
+        : "#e2b67b"
+  );
+
+  // Borde
+  elipse(
+    0, 0, 132, 96,
+    cocida ? "#eebf77" : "#f2d4a0"
+  );
+
+  // Salsa
+  if (pizza.ingredientes.includes(0)) {
+    elipse(0, 0, 119, 85, "#c6533c");
+  }
+
+  // Queso
+  if (pizza.ingredientes.includes(1)) {
+    for (let i = 0; i < 18; i++) {
+      const a = i * 2.4;
+      const r = Math.sqrt((i + 1) / 19) * 98;
+
+      elipse(
+        Math.cos(a) * r,
+        Math.sin(a) * r * 0.72,
+        17, 10,
+        cocida ? "#f3d58b" : "#fff0c3"
+      );
+    }
+  }
+
+  // Ingredientes decorativos
+  for (const p of pizza.posiciones) {
+    const x = p.x;
+    const y = p.y;
+
+    if (p.id === 2) {
+      elipse(x, y, 11, 8, "#a84031");
+      elipse(x - 2, y - 2, 3, 2, "#d98564");
+    }
+
+    if (p.id === 3) {
+      elipse(x, y, 12, 7, "#e9d2ad");
+      elipse(x, y, 7, 4, "#a18b70");
+    }
+
+    if (p.id === 4) {
+      elipse(x, y, 9, 7, "#374333");
+      elipse(x, y, 4, 3, "#70825b");
+    }
+
+    if (p.id === 5) {
+      elipse(x, y, 13, 5, "#398048");
+    }
+
+    if (p.id === 6) {
+      elipse(x, y, 11, 5, "#e8a34a");
+    }
+  }
+
+  // Manchas de tostado
+  if (cocida) {
+    ctx.globalAlpha = Math.min(
+      0.75,
+      pizza.coccion / 200 +
+      pizza.quemado / 100
+    );
+
+    for (let i = 0; i < 15; i++) {
+      const a = i * 2.5;
+      const r = 40 + (i % 5) * 15;
+
+      elipse(
+        Math.cos(a) * r,
+        Math.sin(a) * r * 0.7,
+        6, 4,
+        quemada ? "#40251b" : "#a96b38"
+      );
+    }
+
+    ctx.globalAlpha = 1;
+  }
+
+  ctx.restore();
+}
+
+function dibujarCocina() {
+  const t = juego.animacion;
+
+  // Pared
+  rect(0, 0, W, H, "#e8c49d");
+
+  // Azulejos
+  ctx.strokeStyle = "#d6ae86";
+  ctx.lineWidth = 2;
+
+  for (let x = 0; x < W; x += 50) {
+    for (let y = 0; y < 400; y += 50) {
+      ctx.strokeRect(x, y, 50, 50);
+    }
+  }
+
+  // Franja superior
+  rect(0, 0, W, 92, "#f5e6cb");
+  rect(0, 88, W, 9, "#a15f43");
+
+  texto(
+    "TRATTORIA PIZZA PANIC",
+    W / 2, 58, 32,
+    "#8d4c36", "center"
+  );
+
+  // Pizarra de restaurante
+  rect(35, 125, 270, 190, "#54735a", 14);
+  rect(49, 139, 242, 162, "#304b3d", 9);
+
+  texto(
+    "MENU DEL GIORNO",
+    170, 180, 20,
+    "#f5e2b8", "center"
+  );
+
+  texto(
+    "🍕  FATTA CON AMORE",
+    170, 230, 16,
+    "#e9d2a1", "center"
+  );
+
+  texto(
+    "DAL 2026",
+    170, 274, 15,
+    "#e9d2a1", "center"
+  );
+
+  // Cuadro decorativo
+  rect(350, 135, 190, 140, "#b87956", 12);
+  rect(363, 148, 164, 114, "#f2d6a9", 7);
+
+  texto(
+    "BUON APPETITO",
+    445, 192, 18,
+    "#98583e", "center"
+  );
+
+  texto(
+    "LA PIZZA È",
+    445, 225, 16,
+    "#98583e", "center"
+  );
+
+  texto(
+    "FELICITÀ",
+    445, 248, 16,
+    "#98583e", "center"
+  );
+
+  // Horno de piedra
+  rect(590, 115, 285, 320, "#ae704e", 24);
+  rect(604, 129, 257, 293, "#dfb58c", 20);
+
+  // Boca del horno
+  elipse(733, 293, 113, 120, "#4c3b32");
+  elipse(733, 303, 98, 105, "#231f1d");
+
+  // Fuego animado
+  for (let i = 0; i < 6; i++) {
+    const fx = 655 + i * 30;
+    const fy = 390 + Math.sin(t * 6 + i) * 6;
+
+    elipse(
+      fx, fy, 17, 10,
+      i % 2 ? "#f4b348" : "#e87834"
+    );
+  }
+
+  // Pizza en horno
+  if (juego.pizza && juego.fase === "horneando") {
+    dibujarPizza(733, 321, 0.53);
+  }
+
+  // Mesa
+  rect(0, 435, W, 165, "#9e6b49");
+
+  for (let y = 445; y < H; y += 35) {
+    rect(0, y, W, 3, "#b58056");
+  }
+
+  // Tabla de preparación
+  rect(25, 454, 555, 133, "#e8d1ad", 14);
+  rect(37, 465, 530, 110, "#cba780", 10);
+
+  elipse(300, 526, 165, 60, "#886647");
+  elipse(300, 521, 154, 57, "#e8cda0");
+
+  if (
+    juego.pizza &&
+    juego.fase !== "horneando"
+  ) {
+    dibujarPizza(300, 519, 0.87);
+  } else {
+    texto(
+      "PIZZA EN EL HORNO",
+      300, 530, 17,
+      "#6c513d", "center"
+    );
+  }
+
+  // Estación de ingredientes
+  rect(605, 455, 277, 132, "#f4e8d1", 12);
+
+  texto(
+    "INGREDIENTES",
+    743, 482, 17,
+    "#87543d", "center"
+  );
+
+  for (let i = 0; i < ingredientes.length; i++) {
+    const columna = i % 4;
+    const fila = Math.floor(i / 4);
+
+    const x = 646 + columna * 64;
+    const y = 515 + fila * 43;
+
+    elipse(
+      x, y + 5, 27, 18,
+      i === ingredienteActual()
+        ? "#b84e37"
+        : "#c7ad8b"
+    );
+
+    elipse(x, y + 3, 23, 15, "#fff6e8");
+
+    ctx.font = "23px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(ingredientes[i].emoji, x, y + 10);
+  }
+
+  // Banda del pedido
+  rect(30, 345, 525, 70, "#fff3de", 12);
+
+  if (juego.pedido) {
+    texto(
+      "PEDIDO: " +
+      juego.pedido.nombre.toUpperCase(),
+      50, 375, 20,
+      "#854a36"
+    );
+
+    texto(
+      "HORNO IDEAL: " +
+      juego.pedido.temperatura + " °C",
+      50, 399, 15,
+      "#6e6b52"
+    );
+
+    rect(
+      436, 358, 103, 42,
+      juego.pedido.restante < 15
+        ? "#b94f38"
+        : "#557653",
+      9
+    );
+
+    texto(
+      Math.ceil(juego.pedido.restante) + " s",
+      488, 387, 22,
+      "#ffffff", "center"
+    );
+
+  } else {
+    texto(
+      "¡BIENVENIDA A TU COCINA!",
+      290, 387, 20,
+      "#854a36", "center"
+    );
+  }
+}
+
+// =====================================
+// BUCLE PRINCIPAL
+// =====================================
+
+function dibujar() {
+  ctx.clearRect(0, 0, W, H);
+  dibujarCocina();
+}
+
+function bucle(ahora) {
+  if (!juego.activo) return;
+
+  const dt = Math.min(
+    (ahora - juego.tiempoAnterior) / 1000,
+    0.05
+  );
+
+  juego.tiempoAnterior = ahora;
+
+  actualizar(dt);
+  dibujar();
+
+  if (juego.activo) {
+    requestAnimationFrame(bucle);
+  }
+}
+
+// =====================================
+// EVENTOS DE LOS CONTROLES
+// =====================================
+
+$("iniciar").addEventListener(
+  "click", comenzar
+);
+
+$("agregar").addEventListener(
+  "click", agregarIngrediente
+);
+
+$("hornear").addEventListener(
+  "click", accionHorno
+);
+
+$("girar").addEventListener(
+  "click", girarPizza
+);
+
+$("entregar").addEventListener(
+  "click", entregarPizza
+);
+
+$("selector").addEventListener(
+  "input", actualizarControles
+);
+
+$("temperatura").addEventListener(
+  "input", actualizarControles
+);
+
+// Controles con teclado
+document.addEventListener("keydown", e => {
+  const tecla = e.key.toLowerCase();
+
+  if (
+    ["arrowleft", "arrowright",
+     "arrowup", "arrowdown"].includes(tecla)
+  ) {
+    e.preventDefault();
+  }
+
+  if (e.repeat) return;
+
+  if (tecla === "arrowleft") {
+    $("selector").value = Math.max(
+      0, ingredienteActual() - 1
+    );
+  }
+
+  if (tecla === "arrowright") {
+    $("selector").value = Math.min(
+      6, ingredienteActual() + 1
+    );
+  }
+
+  if (tecla === "arrowup") {
+    $("temperatura").value = Math.min(
+      300, temperaturaActual() + 5
+    );
+  }
+
+  if (tecla === "arrowdown") {
+    $("temperatura").value = Math.max(
+      150, temperaturaActual() - 5
+    );
+  }
+
+  if (tecla === "a") agregarIngrediente();
+  if (tecla === "h") accionHorno();
+  if (tecla === "g") girarPizza();
+  if (tecla === "e") entregarPizza();
+
+  actualizarControles();
+});
+
+// =====================================
+// PREPARACIÓN PARA ARDUINO UNO
+// =====================================
+
+// Esta función permitirá controlar el juego
+// desde los dos faders y cuatro botones físicos.
+//
+// Ejemplo de datos:
+// {
+//   ingrediente: 3,
+//   temperatura: 225,
+//   agregar: true,
+//   hornear: false,
+//   girar: false,
+//   entregar: false
+// }
+//
+// Los botones deberán enviarse como eventos
+// de pulsación, no continuamente mientras
+// estén presionados.
+
+window.recibirArduino = function(datos) {
+
+  if (typeof datos.ingrediente === "number") {
+    $("selector").value = Math.max(
+      0,
+      Math.min(6, Math.round(datos.ingrediente))
+    );
+  }
+
+  if (typeof datos.temperatura === "number") {
+    $("temperatura").value = Math.max(
+      150,
+      Math.min(300, Math.round(datos.temperatura))
+    );
+  }
+
+  if (datos.agregar === true) {
+    agregarIngrediente();
+  }
+
+  if (datos.hornear === true) {
+    accionHorno();
+  }
+
+  if (datos.girar === true) {
+    girarPizza();
+  }
+
+  if (datos.entregar === true) {
+    entregarPizza();
+  }
+
+  actualizarControles();
+};
+
+// Pantalla inicial
+actualizarControles();
+dibujar();
+
+</script>
+<script>
+// CONEXIÓN USB DEL ARDUINO (Chrome / Edge)
+// Protocolo: ingredienteAnalogico,temperaturaAnalogica,agregar,hornear,girar,entregar
+(() => {
+  const boton = document.getElementById('conectarArduino');
+  const estado = document.getElementById('estadoArduino');
+  let puerto = null;
+  let lector = null;
+  let conectando = false;
+  let conectado = false;
+  let ultimaLectura = '';
+
+  function mostrar(texto) { estado.textContent = texto; }
+
+  function procesarLinea(linea) {
+    const partes = linea.trim().split(',');
+    if (partes.length !== 6) return;
+    const numeros = partes.map(Number);
+    if (numeros.some(n => !Number.isFinite(n))) return;
+    const [a0, a1, agregar, hornear, girar, entregar] = numeros;
+    if (a0 < 0 || a0 > 1023 || a1 < 0 || a1 > 1023) return;
+    if (![agregar, hornear, girar, entregar].every(n => n === 0 || n === 1)) return;
+    if (typeof window.recibirArduino !== 'function') return;
+    window.recibirArduino({
+      ingrediente: Math.round(Math.min(531, a0) * 6 / 531),
+      temperatura: Math.round(150 + Math.min(531, a1) * 150 / 531),
+      agregar: agregar === 1,
+      hornear: hornear === 1,
+      girar: girar === 1,
+      entregar: entregar === 1
+    });
+  }
+
+  async function conectar() {
+    if (conectando || conectado) return;
+    if (!('serial' in navigator)) {
+      mostrar('Usa Chrome o Edge en localhost para conectar Arduino.');
+      return;
+    }
+    conectando = true;
+    boton.disabled = true;
+    mostrar('Selecciona Arduino Uno en la ventana de Chrome…');
+    try {
+      // La solicitud se hace una sola vez, por clic del usuario.
+      puerto = await navigator.serial.requestPort();
+      await puerto.open({ baudRate: 9600 });
+      conectado = true;
+      boton.textContent = '🟢 ARDUINO CONECTADO';
+      mostrar('Conectado. ¡Ya puedes jugar!');
+      const decodificador = new TextDecoder();
+      let buffer = '';
+      // Este bucle permanece activo mientras el USB esté conectado.
+      while (puerto.readable) {
+        lector = puerto.readable.getReader();
+        try {
+          while (true) {
+            const { value, done } = await lector.read();
+            if (done) break;
+            buffer += decodificador.decode(value, { stream: true });
+            const lineas = buffer.split(/\r?\n/);
+            buffer = lineas.pop() || '';
+            if (buffer.length > 300) buffer = '';
+            for (const linea of lineas) procesarLinea(linea);
+          }
+        } finally {
+          lector.releaseLock();
+          lector = null;
+        }
+        break;
+      }
+    } catch (error) {
+      if (error.name === 'NotFoundError') {
+        mostrar('No seleccionaste un puerto. Puedes intentarlo de nuevo.');
+      } else {
+        mostrar('No se pudo conectar: ' + error.message + '. Cierra el Monitor Serial del IDE.');
+      }
+      console.error('Arduino:', error);
+    } finally {
+      conectado = false;
+      conectando = false;
+      boton.disabled = false;
+      boton.textContent = '🎮 CONECTAR ARDUINO';
+      if (puerto) {
+        try { await puerto.close(); } catch (_) {}
+        puerto = null;
+      }
+      if (estado.textContent === 'Conectado. ¡Ya puedes jugar!') {
+        mostrar('Arduino desconectado. Presiona conectar para volver a usarlo.');
+      }
+    }
+  }
+  boton.addEventListener('click', conectar);
+})();
+</script>
+
+<script>
+// Refleja en la barra fija la información que el juego ya calcula.
+(() => {
+  const ids = ['nombrePizza','tiempo','ingredientesPedido','valorIngrediente'];
+  const origenes = ids.map(id => document.getElementById(id));
+  const destinos = ['pedidoFijoNombre','pedidoFijoTiempo','pedidoFijoIngredientes','pedidoFijoSeleccion']
+    .map(id => document.getElementById(id));
+  function actualizar() {
+    destinos[0].textContent = origenes[0].textContent.trim();
+    destinos[1].textContent = origenes[1].textContent.trim();
+    destinos[2].innerHTML = origenes[2].innerHTML || 'Abre la pizzería para comenzar.';
+    destinos[3].textContent = origenes[3].textContent.trim();
+  }
+  const observador = new MutationObserver(actualizar);
+  origenes.forEach(elemento => observador.observe(elemento, {childList:true,subtree:true,characterData:true}));
+  actualizar();
+})();
+</script>
+</body>
+</html>
